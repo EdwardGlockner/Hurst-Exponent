@@ -1,0 +1,140 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include <sstream>
+#include <iterator>
+#include <float.h>
+
+/* g++ -o output.exe main.cpp
+ * ./output.exe
+ */
+
+
+
+
+/* Create a structure of our data */
+struct Data {
+public:
+	Data(
+		std::string date,
+		double open,
+		double high,
+		double close,
+		double adjclose,
+		int volume
+	) {
+		Date = date;
+		Open = open;
+		High = high;
+		Close = close;
+		AdjClose = adjclose;
+		Volume = volume;
+	}
+
+	void display() {
+		std::cout << "Close: " << Close << std::endl;
+	
+	}
+
+	std::string Date;
+	double Open;
+	double High;
+	double Close;
+	double AdjClose;
+	int Volume;
+};
+
+
+/*
+ * Function to display all the data
+ */
+void display_data(std::vector<Data> my_data) {
+	for (auto data : my_data) {
+		data.display();
+	}
+}
+
+
+/*
+ * Function to read the data from a csv file, and create a vector of type "Data"
+ */
+
+std::vector<Data> create_vector(std::string path) {
+	std::fstream inputFile;
+	inputFile.open(path);
+
+
+	std::string line = "";
+	std::getline(inputFile, line);
+	line = "";
+ 
+
+	std::vector<Data> my_data;
+
+
+	while (std::getline(inputFile, line)) {
+		std::string Date;
+		double Open;
+		double High;
+		double Close;
+		double AdjClose;
+		int Volume;
+
+		std::string tempString = "";
+
+		std::stringstream inputString(line);
+		
+		std::getline(inputString, Date, ',');
+
+		std::getline(inputString, tempString, ',');
+		Open = std::atof(tempString.c_str());
+		tempString = "";
+
+		std::getline(inputString, tempString, ',');
+		High = std::atof(tempString.c_str());
+		tempString = "";
+
+		std::getline(inputString, tempString, ',');
+		Close = std::atof(tempString.c_str());
+		tempString = "";
+
+		std::getline(inputString, tempString, ',');
+ 		AdjClose = std::atof(tempString.c_str());
+		tempString = "";
+
+		std::getline(inputString, tempString, ',');
+		Volume = std::atoi(tempString.c_str());
+		
+
+		Data current_data(Date, Open, High, Close, AdjClose, Volume);
+
+		my_data.push_back(current_data);
+	
+		line = "";
+	} 
+	return my_data;	
+
+}
+
+
+
+
+void hurst_exponent() {
+	
+
+
+}
+
+
+int main() {
+
+	
+	std::string path = "Data/AMZN.csv";
+	
+	std::vector<Data> my_data = create_vector(path);
+
+
+	display_data(my_data);
+	return 0;
+};
