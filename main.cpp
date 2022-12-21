@@ -133,19 +133,47 @@ double stdev(std::vector<double> data) {
 	double result = 0;
 
 	for (auto point2 : data) {
-		result  = result + pow(point2-mean, 2);	
-		
+		result  = result + pow(point2-mean, 2);		
 	}
-	std::cout << mean << std::endl;
+	//result = sqrt(result/(data.size()-1));
 
-	return 0;
+	return result;
 }
+
+
+double calculateB(std::vector<double> x, std::vector<double> y)
+{
+	
+    double n = sizeof(x) / sizeof(x[0]);
+     
+    // sum of array x
+    int sx = accumulate(x, x + n, 0);
+ 
+    // sum of array y
+    int sy = accumulate(y, y + n, 0);
+ 
+    // for sum of product of x and y
+    int sxsy = 0;
+ 
+    // sum of square of x
+    int sx2 = 0;
+    for(int i = 0; i < n; i++)
+    {
+        sxsy += x[i] * y[i];
+         sx2 += x[i] * x[i];
+    }
+    double b = (double)(n * sxsy - sx * sy) /
+                       (n * sx2 - sx * sx);
+ 
+    return b;
+}
+
 
 
 
 int hurst_exponent(std::vector<double> my_data) {
 	
-	int size_lag = 98;
+	double size_lag = 98;
 	std::vector<int> lags(size_lag);
 
 	for (int i = 0; i < size_lag; i++) {
@@ -154,21 +182,30 @@ int hurst_exponent(std::vector<double> my_data) {
 
 
 	std::vector<double> tau(size_lag);
-	
+	std::vector<double> final_term;
+	std::vector<double> term2;
+	double x;
+
 	for (int i = 0; i < size_lag; i++) {
-		std::vector<double> final_term;
-		std::vector<double> term2;
-		for (int j = lags[i]; j< my_data.size(); j++) {
+		final_term.resize(my_data.size() - lags[i], 1);
+		term2.resize(my_data.size() - lags[i], 1);
+		for (int j = lags[i]; j < my_data.size(); j++) {
 			term2[j] = my_data[j];
 		}
 
 		for (int k = 0; k < my_data.size()-lags[i]; k++) {
 			final_term[k] = my_data[k] - term2[k];
 		}
-		double x = stdev(my_data);
+
+		x = stdev(term2);
+		tau[i] = sqrt(x);
+		final_term.clear();
+		term2.clear();
 	}
+
+	double hurst = calculateB(log(lags), log(tau), 1);
 	
-	return 0;
+	return hurst;
 
 }
 
