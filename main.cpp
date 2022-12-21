@@ -6,6 +6,7 @@
 #include <iterator>
 #include <float.h>
 #include <cmath>
+#include <numeric>
 
 /* g++ -o output.exe main.cpp
  * ./output.exe
@@ -115,12 +116,35 @@ std::vector<Data> create_vector(std::string path) {
 		line = "";
 	} 
 	return my_data;	
+}
+
+std::vector<double> closing_price(std::vector<Data> my_data) {
+	std::vector<double> closing(my_data.size());
+	for (auto data : my_data) {
+		closing.push_back(data.Close);
+	}
+	return closing;
 
 }
 
+double stdev(std::vector<double> data) {
+	double mean = std::accumulate(data.begin(), data.end(), 0.0) / data.size();
 
-int hurst_exponent(std::vector<Data> my_data) {
+	double result = 0;
 
+	for (auto point2 : data) {
+		result  = result + pow(point2-mean, 2);	
+		
+	}
+	std::cout << mean << std::endl;
+
+	return 0;
+}
+
+
+
+int hurst_exponent(std::vector<double> my_data) {
+	
 	int size_lag = 98;
 	std::vector<int> lags(size_lag);
 
@@ -138,11 +162,13 @@ int hurst_exponent(std::vector<Data> my_data) {
 			term2[j] = my_data[j];
 		}
 
-		for (int k = 0; k < my_data.size()-lags[i]) {
-			final_term[k] = my_data[k] - temp2[k]
+		for (int k = 0; k < my_data.size()-lags[i]; k++) {
+			final_term[k] = my_data[k] - term2[k];
 		}
-		tau[i] = sqrt(std(final_term));	
+		double x = stdev(my_data);
 	}
+	
+	return 0;
 
 }
 
@@ -153,9 +179,10 @@ int main() {
 	std::string path = "Data/AMZN.csv";
 	
 	std::vector<Data> my_data = create_vector(path);
-
+	std::vector<double> closing = closing_price(my_data);
 	//display_data(my_data);
-	hurst_exponent(my_data);
+	hurst_exponent(closing);
+
 
 	return 0;
 };
