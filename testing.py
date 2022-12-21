@@ -2,34 +2,25 @@ from numpy import cumsum, log, polyfit, sqrt, std, subtract
 from numpy.random import randn
 
 def hurst(ts):
-    """
-    Returns the Hurst Exponent of the time series vector ts
 
-    Parameters
-    ----------
-    ts : `numpy.array`
-        Time series upon which the Hurst Exponent will be calculated
+    lags = []
+    for i in range(2,100):
+        lags.append(i)
 
-    Returns
-    -------
-    'float'
-        The Hurst Exponent from the poly fit output
-    """
-    # Create the range of lag values
-    lags = range(2, 100)
+    tau = []
+    for i in range(0, len(lags)):
+        temp = []
+        temp2 = []
+        sub = []
+        for j in range(lags[i], len(ts)):
+            temp.append(ts[j])
+        for k in range(0, len(ts)-lags[i]):
+            temp2.append(ts[k]-temp[k])
+        tau.append(sqrt(std(temp2)))
 
-    # Calculate the array of the variances of the lagged differences
-    tau = [sqrt(std(subtract(ts[lag:], ts[:-lag]))) for lag in lags]
-    
+
     # Use a linear fit to estimate the Hurst Exponent
     poly = polyfit(log(lags), log(tau), 1)
-
-
-
-
-
-    print(subtract(ts[2:], ts[:-2]))
-
 
 
 
@@ -42,10 +33,15 @@ mr = log(randn(100000)+1000)
 tr = log(cumsum(randn(100000)+1)+1000)
 
 
-hurst(gbm)
-# Output the Hurst Exponent for each of the above series
-# and the price of Google (the Adjusted Close price) for 
-# the ADF test given above in the article
-#print("Hurst(GBM):   %s" % hurst(gbm))
-#print("Hurst(MR):    %s" % hurst(mr))
-#print("Hurst(TR):    %s" % hurst(tr))
+
+
+
+
+
+
+print(hurst(gbm))
+
+
+
+
+
