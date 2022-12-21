@@ -120,7 +120,10 @@ std::vector<Data> create_vector(std::string path) {
 
 
 
-void hurst_exponent() {
+void hurst_exponent(std::vector<Data> my_data) {
+	for (auto data : my_data) {
+		std::cout << data.Close << std::endl;
+	}
 	
 
 
@@ -134,7 +137,7 @@ int main() {
 	
 	std::vector<Data> my_data = create_vector(path);
 
-
-	display_data(my_data);
+	//display_data(my_data);
+	hurst_exponent(my_data);
 	return 0;
 };
