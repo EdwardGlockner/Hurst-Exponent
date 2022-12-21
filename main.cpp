@@ -132,17 +132,24 @@ int hurst_exponent(std::vector<Data> my_data) {
 	std::vector<double> tau(size_lag);
 	
 	for (int i = 1; i < size_lag; i++) {
-		for (auto data: my_data) {
+		std::vector<double> first_vec;
+		std::vector<double> second_vec;
 
-			tau[i] = sqrt()
+		for (int i  = lags[i]; i < size_lag; i++) {
+			first_vec[i] = 
 		}
+		
 	}
 
-
+	/*
 	for (auto data : my_data) {
 		std::cout << data.Close << std::endl;
 	}
-	
+	*/
+
+	for (int i = 1; i < size_lag; i++) {
+		std::cout << tau[i] << std::endl;
+	}
 
 	return 0;
 }
