@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iterator>
 #include <float.h>
+#include <cmath>
 
 /* g++ -o output.exe main.cpp
  * ./output.exe
@@ -118,15 +119,32 @@ std::vector<Data> create_vector(std::string path) {
 }
 
 
+int hurst_exponent(std::vector<Data> my_data) {
+
+	int size_lag = 98;
+	std::vector<int> lags(size_lag);
+
+	for (int i = 0; i < size_lag; i++) {
+    		lags[i] = i;
+	}
 
 
-void hurst_exponent(std::vector<Data> my_data) {
+	std::vector<double> tau(size_lag);
+	
+	for (int i = 1; i < size_lag; i++) {
+		for (auto data: my_data) {
+
+			tau[i] = sqrt()
+		}
+	}
+
+
 	for (auto data : my_data) {
 		std::cout << data.Close << std::endl;
 	}
 	
 
-
+	return 0;
 }
 
 
@@ -139,5 +157,6 @@ int main() {
 
 	//display_data(my_data);
 	hurst_exponent(my_data);
+
 	return 0;
 };
