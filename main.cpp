@@ -8,6 +8,10 @@
 #include <cmath>
 #include <numeric>
 #include <time.h>
+#include <math.h>
+#include "pbPlots.hpp"
+#include "supportLib.hpp"
+
 
 /* g++ -o output.exe main.cpp
  * ./output.exe
@@ -161,12 +165,11 @@ double least_square(std::vector<double> x_val, std::vector<double> y_val) {
 
 
 
-double hurst_exponent(std::vector<double> my_data) {
+double hurst_exponent(std::vector<double> my_data, int size_lag) {
 	
-	double size_lag = 98;
 	std::vector<double> lags(size_lag);
 
-	for (int i = 0; i < size_lag; i++) {
+	for (int i = 1; i < size_lag; i++) {
     		lags[i] = i;
 	}
 
@@ -208,6 +211,25 @@ double hurst_exponent(std::vector<double> my_data) {
 }
 
 
+std::vector<double> hurst_values(std::vector<double> my_data) {
+	std::vector<double> hurst_values;
+	for (int i = 1; i < 200; i++) {
+		hurst_values.push_back(hurst_exponent(my_data, i));
+	}
+
+	return hurst_values;
+	
+}
+
+void write_to_file(std::vector<double> hurst_vector) {
+	for (double i = 1; hurst_vector.size()+1; i++) {
+		lag_vector.push_back(i);
+	} 
+	std::ofstrem MyFile("hurst.txt");
+
+}
+
+
 int main() {
 
 	
@@ -216,12 +238,12 @@ int main() {
 	std::vector<Data> my_data = create_vector(path);
 	std::vector<double> closing = closing_price(my_data);
 	//display_data(my_data);
-	double value = hurst_exponent(closing);
+	double value = hurst_exponent(closing, 98);
 	std::cout << "GOOG:" << value << std::endl;
 
 
 
-
+	/*
  	srand( (unsigned)time( NULL ) );
 	std::vector<double> rand_numbers;
 	double rand_value = 0;
@@ -241,10 +263,13 @@ int main() {
 
 
 
-	double v2 = hurst_exponent(rand_numbers);
+	double v2 = hurst_exponent(rand_numbers, 98);
 	std::cout << "Mean reverting series" << v2 << std::endl;	
 
-	double v3 = hurst_exponent(trending);
+	double v3 = hurst_exponent(trending, 98);
 	std::cout << "Trending" << v3 << std::endl;
 	return 0;
-}
+	*/
+	std::vector<double> hurst_vector = hurst_values(closing);
+	plot_hurst_values(hurst_vector);
+};
