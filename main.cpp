@@ -141,40 +141,29 @@ double stdev(std::vector<double> data) {
 }
 
 
-double calculateB(std::vector<double> x, std::vector<double> y)
-{
-	
-    double n = sizeof(x) / sizeof(x[0]);
-     
-    // sum of array x
-    int sx = accumulate(x, x + n, 0);
- 
-    // sum of array y
-    int sy = accumulate(y, y + n, 0);
- 
-    // for sum of product of x and y
-    int sxsy = 0;
- 
-    // sum of square of x
-    int sx2 = 0;
-    for(int i = 0; i < n; i++)
-    {
-        sxsy += x[i] * y[i];
-         sx2 += x[i] * x[i];
-    }
-    double b = (double)(n * sxsy - sx * sy) /
-                       (n * sx2 - sx * sx);
- 
-    return b;
-}
+double least_square(std::vector<double> x_val, std::vector<double> y_val) {
+	if (x_val.size() != y_val.size()) {
+		return 0;
+	}
+
+	double x_mean = std::accumulate(x_val.begin(), x_val.end(), 0.0) / x_val.size();
+	double y_mean = std::accumulate(y_val.begin(), y_val.end(), 0.0) / y_val.size();
+	double numerator;
+	double denominator;
+
+	for (int i = 0; i < x_val.size(); i++) {
+		numerator = numerator +  (x_val[i] - x_mean) * (y_val[i] - y_mean);
+		denominator = denominator + pow(x_val[i] - x_mean, 2);
+	}
+	return numerator / denominator;
+}	
 
 
 
-
-int hurst_exponent(std::vector<double> my_data) {
+double hurst_exponent(std::vector<double> my_data) {
 	
 	double size_lag = 98;
-	std::vector<int> lags(size_lag);
+	std::vector<double> lags(size_lag);
 
 	for (int i = 0; i < size_lag; i++) {
     		lags[i] = i;
@@ -202,8 +191,16 @@ int hurst_exponent(std::vector<double> my_data) {
 		final_term.clear();
 		term2.clear();
 	}
+	std::vector<double> lags_log(size_lag);
+	std::vector<double> tau_log(size_lag);
 
-	double hurst = calculateB(log(lags), log(tau), 1);
+	for (int i = 1; i < lags.size(); i++) {
+		lags_log[i] = log(lags[i]);
+		tau_log[i] = log(tau[i]);
+	}
+
+
+	double hurst = 2*least_square(lags_log, tau_log);
 	
 	return hurst;
 
@@ -213,13 +210,13 @@ int hurst_exponent(std::vector<double> my_data) {
 int main() {
 
 	
-	std::string path = "Data/AMZN.csv";
+	std::string path = "Data/GOOG.csv";
 	
 	std::vector<Data> my_data = create_vector(path);
 	std::vector<double> closing = closing_price(my_data);
 	//display_data(my_data);
-	hurst_exponent(closing);
-
+	double value = hurst_exponent(closing);
+	std::cout << value << std::endl;
 
 	return 0;
 };
