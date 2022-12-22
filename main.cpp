@@ -9,8 +9,6 @@
 #include <numeric>
 #include <time.h>
 #include <math.h>
-#include "pbPlots.hpp"
-#include "supportLib.hpp"
 
 
 /* g++ -o output.exe main.cpp
@@ -222,11 +220,16 @@ std::vector<double> hurst_values(std::vector<double> my_data) {
 }
 
 void write_to_file(std::vector<double> hurst_vector) {
-	for (double i = 1; hurst_vector.size()+1; i++) {
-		lag_vector.push_back(i);
-	} 
-	std::ofstrem MyFile("hurst.txt");
-
+	std::vector<double> lag_vector(hurst_vector.size());
+	for (double i = 1; i < hurst_vector.size()+1; i++) {
+		lag_vector[i] = i;
+	}
+	std::ofstream ofs;
+	ofs.open("hurst.txt", std::ofstream::out | std::ofstream::trunc);
+	for (int i = 1; i < hurst_vector.size(); i++) {
+		ofs << lag_vector[i] << ", " << hurst_vector[i] << std::endl;
+	}
+	ofs.close();
 }
 
 
@@ -271,5 +274,5 @@ int main() {
 	return 0;
 	*/
 	std::vector<double> hurst_vector = hurst_values(closing);
-	plot_hurst_values(hurst_vector);
+	write_to_file(hurst_vector);
 };
