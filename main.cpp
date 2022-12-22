@@ -234,22 +234,18 @@ void write_to_file(std::vector<double> hurst_vector) {
 
 
 int main() {
-
 	
 	std::string path = "Data/AMZN.csv";
 	
 	std::vector<Data> my_data = create_vector(path);
 	std::vector<double> closing = closing_price(my_data);
-	//display_data(my_data);
 	double value = hurst_exponent(closing, 98);
 	std::cout << "GOOG:" << value << std::endl;
-
-
-
 	/*
  	srand( (unsigned)time( NULL ) );
 	std::vector<double> rand_numbers;
 	double rand_value = 0;
+
 	for (int i = 0; i < 10000; i++) {
 		rand_value = (double) rand()/RAND_MAX + 1;
 
@@ -271,8 +267,9 @@ int main() {
 
 	double v3 = hurst_exponent(trending, 98);
 	std::cout << "Trending" << v3 << std::endl;
-	return 0;
 	*/
 	std::vector<double> hurst_vector = hurst_values(closing);
 	write_to_file(hurst_vector);
+	return 0;
+
 };

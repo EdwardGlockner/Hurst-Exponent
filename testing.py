@@ -31,7 +31,7 @@ def hurst(ts):
 gbm = log(cumsum(randn(100000))+1000)
 mr = log(randn(100000)+1000)
 tr = log(cumsum(randn(100000)+1)+1000)
-print(mr)
+
 
 print(hurst(mr))
 
