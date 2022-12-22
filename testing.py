@@ -32,14 +32,9 @@ gbm = log(cumsum(randn(100000))+1000)
 mr = log(randn(100000)+1000)
 tr = log(cumsum(randn(100000)+1)+1000)
 
+print(hurst(mr))
 
-
-
-
-
-
-
-print(hurst(gbm))
+print(hurst(tr))
 
 
 

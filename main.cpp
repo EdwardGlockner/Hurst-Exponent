@@ -7,6 +7,7 @@
 #include <float.h>
 #include <cmath>
 #include <numeric>
+#include <time.h>
 
 /* g++ -o output.exe main.cpp
  * ./output.exe
@@ -210,13 +211,40 @@ double hurst_exponent(std::vector<double> my_data) {
 int main() {
 
 	
-	std::string path = "Data/GOOG.csv";
+	std::string path = "Data/AMZN.csv";
 	
 	std::vector<Data> my_data = create_vector(path);
 	std::vector<double> closing = closing_price(my_data);
 	//display_data(my_data);
 	double value = hurst_exponent(closing);
-	std::cout << value << std::endl;
+	std::cout << "GOOG:" << value << std::endl;
 
+
+
+
+ 	srand( (unsigned)time( NULL ) );
+	std::vector<double> rand_numbers;
+	double rand_value = 0;
+	for (int i = 0; i < 10000; i++) {
+		rand_value = (double) rand()/RAND_MAX + 1;
+
+		rand_numbers.push_back(log(rand_value));
+		rand_value = 0;
+	}
+
+	std::vector<double> trending(10000);
+	double rand_val = 0;
+	for (int i = 1; i < trending.size(); i++) {
+		trending[i] = log(10 + trending[i-1]);
+		
+	}
+
+
+
+	double v2 = hurst_exponent(rand_numbers);
+	std::cout << "Mean reverting series" << v2 << std::endl;	
+
+	double v3 = hurst_exponent(trending);
+	std::cout << "Trending" << v3 << std::endl;
 	return 0;
-};
+}
