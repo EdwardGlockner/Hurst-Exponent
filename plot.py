@@ -13,6 +13,6 @@ for line in lines:
 
 
 plt.figure()
-plt.plot(lag_vals[75:], hurst_vals[75:])
+plt.plot(lag_vals, hurst_vals)
 plt.show()
 

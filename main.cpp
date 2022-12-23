@@ -235,7 +235,7 @@ void write_to_file(std::vector<double> hurst_vector) {
 
 int main() {
 	
-	std::string path = "Data/AMZN.csv";
+	std::string path = "Data/BAC.csv";
 	
 	std::vector<Data> my_data = create_vector(path);
 	std::vector<double> closing = closing_price(my_data);
