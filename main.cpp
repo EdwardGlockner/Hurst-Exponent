@@ -16,9 +16,7 @@
  */
 
 
-
-
-/* Create a structure of our data */
+/* Create a structure of our data, read from Yahoo Finance */
 struct Data {
 public:
 	Data(
@@ -36,7 +34,8 @@ public:
 		AdjClose = adjclose;
 		Volume = volume;
 	}
-
+	
+	// Function to write out all the data
 	void display() {
 		std::cout << "Close: " << Close << std::endl;
 	
@@ -138,7 +137,7 @@ double stdev(std::vector<double> data) {
 	for (auto point2 : data) {
 		result  = result + pow(point2-mean, 2);		
 	}
-	//result = sqrt(result/(data.size()-1));
+	result = sqrt(result/(data.size()-1));
 
 	return result;
 }
@@ -151,8 +150,8 @@ double least_square(std::vector<double> x_val, std::vector<double> y_val) {
 
 	double x_mean = std::accumulate(x_val.begin(), x_val.end(), 0.0) / x_val.size();
 	double y_mean = std::accumulate(y_val.begin(), y_val.end(), 0.0) / y_val.size();
-	double numerator;
-	double denominator;
+	double numerator = 0;
+	double denominator = 0;
 
 	for (int i = 0; i < x_val.size(); i++) {
 		numerator = numerator +  (x_val[i] - x_mean) * (y_val[i] - y_mean);
@@ -167,8 +166,8 @@ double hurst_exponent(std::vector<double> my_data, int size_lag) {
 	
 	std::vector<double> lags(size_lag);
 
-	for (int i = 1; i < size_lag; i++) {
-    		lags[i] = i;
+	for (int i = 0; i < size_lag; i++) {
+    		lags[i] = i+2;
 	}
 
 
@@ -196,7 +195,7 @@ double hurst_exponent(std::vector<double> my_data, int size_lag) {
 	std::vector<double> lags_log(size_lag);
 	std::vector<double> tau_log(size_lag);
 
-	for (int i = 1; i < lags.size(); i++) {
+	for (int i = 0; i < lags.size(); i++) {
 		lags_log[i] = log(lags[i]);
 		tau_log[i] = log(tau[i]);
 	}
@@ -211,7 +210,7 @@ double hurst_exponent(std::vector<double> my_data, int size_lag) {
 
 std::vector<double> hurst_values(std::vector<double> my_data) {
 	std::vector<double> hurst_values;
-	for (int i = 1; i < 200; i++) {
+	for (int i = 2; i < 200; i++) {
 		hurst_values.push_back(hurst_exponent(my_data, i));
 	}
 
@@ -221,8 +220,8 @@ std::vector<double> hurst_values(std::vector<double> my_data) {
 
 void write_to_file(std::vector<double> hurst_vector) {
 	std::vector<double> lag_vector(hurst_vector.size());
-	for (double i = 1; i < hurst_vector.size()+1; i++) {
-		lag_vector[i] = i;
+	for (double i = 0; i < hurst_vector.size(); i++) {
+		lag_vector[i] = i+2;
 	}
 	std::ofstream ofs;
 	ofs.open("hurst.txt", std::ofstream::out | std::ofstream::trunc);
@@ -235,13 +234,13 @@ void write_to_file(std::vector<double> hurst_vector) {
 
 int main() {
 	
-	std::string path = "Data/BAC.csv";
+	std::string path = "Data/GOOG.csv";
 	
 	std::vector<Data> my_data = create_vector(path);
 	std::vector<double> closing = closing_price(my_data);
 	double value = hurst_exponent(closing, 98);
 	std::cout << "GOOG:" << value << std::endl;
-	/*
+	
  	srand( (unsigned)time( NULL ) );
 	std::vector<double> rand_numbers;
 	double rand_value = 0;
@@ -267,7 +266,7 @@ int main() {
 
 	double v3 = hurst_exponent(trending, 98);
 	std::cout << "Trending" << v3 << std::endl;
-	*/
+	
 	std::vector<double> hurst_vector = hurst_values(closing);
 	write_to_file(hurst_vector);
 	return 0;
